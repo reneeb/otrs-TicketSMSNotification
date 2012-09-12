@@ -1,0 +1,18 @@
+=head1 NAME
+
+TicketSMSNotification
+
+=head1 DESCRIPTION
+
+This add on sends short messages to agents when a ticket is created. To use this, you need to install the Perl module C<Nexmo::SMS> and create
+an account at L<http://nexmo.com>.
+
+In the SysConfig you have to configure the account data.
+
+The recipient of the messages can be configured by queue.
+
+=head1 AUTHOR AND LICENSE
+
+Renee Baecker E<lt>opar@perl-services.deE<gt>
+
+License: AGPL 3
