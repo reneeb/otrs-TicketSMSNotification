@@ -39,6 +39,7 @@ sub Data {
     $Lang->{'Mobile number to send the SMS notifications to (international format, e.g. "+49 123 45236" or "+4911-2351223").'} = 'Mobilnummer für SMS-Benachrichtigungen (Internationales Format, z.B. "+49 123 45236" oder "+4911-2351223")';
     $Lang->{'SMS Settings'} = 'SMS-Einstellungen';
     $Lang->{'The format of the mobile number is invalid. Please use international format, e.g. "+49 123 45236" or "+4911-2351223".'} = 'Das Format der Mobilnummer ist ungültig. Bitte verwenden Sie das Internationale Format, z.B. "+49 123 45236" oder "+4911-2351223".';
+    $Lang->{'History::SMSNotification'} = 'SMS-Benachrichtigung an %s';
     #$Lang->{''} = '';
 
     return 1;

@@ -151,7 +151,7 @@ sub Run {
         else {
             $Self->{TicketObject}->HistoryAdd(
                 TicketID     => $Ticket{TicketID},
-                Name         => 'SMSNotification%%' . $Recipient,
+                Name         => '%%' . $Recipient,
                 HistoryType  => 'SMSNotification',
                 CreateUserID => $Param{UserID},
             );
