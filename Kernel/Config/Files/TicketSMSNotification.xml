@@ -43,7 +43,7 @@
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::PreferencesGeneric</Item>
-                <Item Key="Column">Email Settings</Item>
+                <Item Key="Column">SMS Settings</Item>
                 <Item Key="Label" Translatable="1">New ticket notification (via SMS)</Item>
                 <Item Key="Desc" Translatable="1">Send me a SMS if there is a new ticket in "My SMS Queues".</Item>
                 <Item Key="Key" Translatable="1">Send new ticket notifications (via SMS)</Item>
@@ -67,7 +67,7 @@
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::PreferencesGeneric</Item>
-                <Item Key="Column">Email Settings</Item>
+                <Item Key="Column">SMS Settings</Item>
                 <Item Key="Label" Translatable="1">Ticket follow up notification (via SMS)</Item>
                 <Item Key="Desc" Translatable="1">Send me a notification (SMS) if a customer sends a follow up and I'm the owner of the ticket or the ticket is unlocked and is in one of my subscribed queues.</Item>
                 <Item Key="Key" Translatable="1">Send ticket follow up notifications (via SMS)</Item>
@@ -85,16 +85,16 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PreferencesGroups###MoveNotifySMS" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the MoveNotify object in the preference view of the agent interface.</Description>
+        <Description Translatable="1">Parameters for the MoveNotifySMS object in the preference view of the agent interface.</Description>
         <Group>TicketSMSNotification</Group>
         <SubGroup>Frontend::Agent::Preferences</SubGroup>
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::PreferencesGeneric</Item>
-                <Item Key="Column">Email Settings</Item>
-                <Item Key="Label" Translatable="1">Ticket move notification</Item>
-                <Item Key="Desc" Translatable="1">Send me a notification if a ticket is moved into one of "My Queues".</Item>
-                <Item Key="Key" Translatable="1">Send ticket move notifications</Item>
+                <Item Key="Column">SMS Settings</Item>
+                <Item Key="Label" Translatable="1">Ticket move notification (via SMS)</Item>
+                <Item Key="Desc" Translatable="1">Send me a SMS notification if a ticket is moved into one of "My SMS Queues".</Item>
+                <Item Key="Key" Translatable="1">Send ticket move notifications (via SMS)</Item>
                 <Item Key="Data">
                     <Hash>
                         <Item Key="0">No</Item>
@@ -109,16 +109,16 @@
         </Setting>
     </ConfigItem>
     <ConfigItem Name="PreferencesGroups###CustomSMSQueue" Required="0" Valid="1">
-        <Description Translatable="1">Parameters for the CustomQueue object in the preference view of the agent interface.</Description>
+        <Description Translatable="1">Parameters for the CustomSMSQueue object in the preference view of the agent interface.</Description>
         <Group>TicketSMSNotification</Group>
         <SubGroup>Frontend::Agent::Preferences</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="Module">Kernel::Output::HTML::PreferencesCustomQueue</Item>
-                <Item Key="Column">Other Settings</Item>
-                <Item Key="Label" Translatable="1">My Queues</Item>
-                <Item Key="Desc" Translatable="1">Your queue selection of your favorite queues. You also get notified about those queues via email if enabled.</Item>
-                <Item Key="Key" Translatable="1">My Queues</Item>
+                <Item Key="Module">Kernel::Output::HTML::PreferencesCustomSMSQueue</Item>
+                <Item Key="Column">SMS Settings</Item>
+                <Item Key="Label" Translatable="1">My SMS Queues</Item>
+                <Item Key="Desc" Translatable="1">Your queue selection for SMS notifications.</Item>
+                <Item Key="Key" Translatable="1">My SMS Queues</Item>
                 <Item Key="Prio">25005</Item>
                 <Item Key="Permission">ro</Item>
                 <Item Key="Active">1</Item>
@@ -132,7 +132,7 @@
         <Setting>
             <Hash>
                 <Item Key="Module">Kernel::Output::HTML::PreferencesGeneric</Item>
-                <Item Key="Column">SMS Notifications</Item>
+                <Item Key="Column">SMS Settings</Item>
                 <Item Key="Label" Translatable="1">Mobile number to send the SMS notifications to.</Item>
                 <Item Key="Key" Translatable="1">Mobile number to send the SMS notifications to.</Item>
                 <Item Key="Data">
@@ -143,6 +143,26 @@
                 <Item Key="Prio">25001</Item>
                 <Item Key="Active">1</Item>
             </Hash>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TicketSMSNotification::OnlyQueues" Required="0" Valid="1">
+        <Description Translatable="1">Restrict queues where SMS notifications can be enabled.</Description>
+        <Group>TicketSMSNotification</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Array>
+                <Item></Item>
+            </Array>
+        </Setting>
+    </ConfigItem>
+    <ConfigItem Name="TicketSMSNotification::ExcludeQueues" Required="0" Valid="1">
+        <Description Translatable="1">Restrict queues where SMS notifications can be enabled.</Description>
+        <Group>TicketSMSNotification</Group>
+        <SubGroup>Core</SubGroup>
+        <Setting>
+            <Array>
+                <Item>Junk</Item>
+            </Array>
         </Setting>
     </ConfigItem>
 </otrs_config>

@@ -1,13 +1,13 @@
 # --
-# Kernel/Output/HTML/PreferencesCustomQueue.pm
-# Copyright (C) 2001-2013 OTRS AG, http://otrs.com/
+# Kernel/Output/HTML/PreferencesCustomSMSQueue.pm
+# Copyright (C) 2014 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
 # did not receive this file, see http://www.gnu.org/licenses/agpl.txt.
 # --
 
-package Kernel::Output::HTML::PreferencesCustomQueue;
+package Kernel::Output::HTML::PreferencesCustomSMSQueue;
 
 use strict;
 use warnings;
@@ -47,12 +47,34 @@ sub Param {
     if ( !$Param{UserData}->{UserID} ) {
         return ();
     }
+
     if ( $Param{UserData}->{UserID} ) {
         %QueueData = $Self->{QueueObject}->GetAllQueues(
             UserID => $Param{UserData}->{UserID},
             Type => $Self->{ConfigItem}->{Permission} || 'ro',
         );
     }
+
+    my %QueueDataReverse = reverse %QueueData;
+
+    my @Excludes = @{ $Self->{ConfigObject}->Get( 'TicketSMSNotification::ExcludeQueues' ) || [] };
+    if ( @Excludes ) {
+        delete @QueueDataReverse{@Excludes};
+    }
+
+    my @Only     = @{ $Self->{ConfigObject}->Get( 'TicketSMSNotification::OnlyQueues' ) || [] };
+    if ( @Only ) {
+        %QueueData = ();
+
+        QUEUE:
+        for my $Queue ( keys %QueueDataReverse ) {
+            my $ID = $QueueDataReverse{$Queue};
+            next QUEUE if !$ID;
+
+            $QueueData{$ID} = $Queue;
+        }
+    }
+
     if ( $Self->{ParamObject}->GetArray( Param => 'QueueID' ) ) {
         @CustomQueueIDs = $Self->{ParamObject}->GetArray( Param => 'QueueID' );
     }
