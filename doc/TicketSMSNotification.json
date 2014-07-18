@@ -1,0 +1,19 @@
+{
+    "name": "TicketSMSNotification",
+    "version": "3.3.2",
+    "framework": [
+        "3.0.x",
+        "3.1.x",
+        "3.2.x",
+        "3.3.x"
+    ],
+    "vendor": {
+        "name":  "Perl-Services.de",
+        "url": "http://www.perl-services.de"
+    },
+    "license": "GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007",
+    "description" : {
+        "en": "Send agent notifications via SMS.",
+        "de": "Agenten-Benachrichtigungen per SMS"
+    }
+}
