@@ -79,7 +79,7 @@ sub Param {
         @CustomQueueIDs = $Self->{ParamObject}->GetArray( Param => 'QueueID' );
     }
     elsif ( $Param{UserData}->{UserID} && !defined $CustomQueueIDs[0] ) {
-        @CustomQueueIDs = $Self->{QueueObject}->GetAllCustomQueues(
+        @CustomQueueIDs = $Self->_GetAllCustomSMSQueues(
             UserID => $Param{UserData}->{UserID}
         );
     }
@@ -159,6 +159,23 @@ sub Message {
     my ( $Self, %Param ) = @_;
 
     return $Self->{Message} || '';
+}
+
+sub _GetAllCustomSMSQueues {
+    my ($Self, %Param) = @_;
+
+    my $SQL = 'SELECT queue_id FROM ps_sms_queues WHERE user_id = ?';
+    return if !$Self->{DBObject}->Prepare(
+        SQL  => $SQL,
+        Bind => [ \$Param{UserID} ],
+    );
+
+    my @QueueIDs;
+    while ( my @Row = $Self->{DBObject}->FetchrowArray() ) {
+        push @QueueIDs, $Row[0];
+    }
+
+    return @QueueIDs;
 }
 
 1;

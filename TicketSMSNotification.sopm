@@ -17,12 +17,23 @@
         <File Permission="644" Location="Kernel/Config/Files/TicketSMSNotification.xml" />
         <File Permission="644" Location="Kernel/Language/de_TicketSMSNotification.pm" />
         <File Permission="644" Location="Kernel/Output/HTML/PreferencesCustomSMSQueue.pm" />
+        <File Permission="644" Location="Kernel/Output/HTML/PreferencesPhone.pm" />
         <File Permission="644" Location="Kernel/System/Ticket/Event/SMSNotification.pm" />
         <File Permission="644" Location="doc/TicketSMSNotification.json" />
         <File Permission="644" Location="doc/en/TicketSMSNotification.pod" />
         <File Permission="644" Location="var/packagesetup/TicketSMSNotification.pm" />
     </Filelist>
     <DatabaseInstall Type="post">
+        <TableCreate Name="ps_sms_queues">
+            <Column Name="user_id" Required="true" Type="SMALLINT" />
+            <Column Name="queue_id" Required="true" Type="SMALLINT" />
+            <ForeignKey ForeignTable="users">
+                <Reference Local="user_id" Foreign="id" />
+            </ForeignKey>
+            <ForeignKey ForeignTable="queue">
+                <Reference Local="queue_id" Foreign="id" />
+            </ForeignKey>
+        </TableCreate>
         <Insert Table="ticket_history_type">
             <Data Key="name" Type="Quote"><![CDATA[SMSNotification]]></Data>
             <Data Key="comments" Type="Quote"><![CDATA[Sent SMS notification to agent]]></Data>
@@ -33,6 +44,21 @@
             <Data Key="change_by">1</Data>
         </Insert>
     </DatabaseInstall>
+    <DatabaseUpgrade Type="post">
+        <TableCreate Name="ps_sms_queues" Version="3.3.2">
+            <Column Name="user_id" Required="true" Type="SMALLINT" />
+            <Column Name="queue_id" Required="true" Type="SMALLINT" />
+            <ForeignKey ForeignTable="users">
+                <Reference Local="user_id" Foreign="id" />
+            </ForeignKey>
+            <ForeignKey ForeignTable="queue">
+                <Reference Local="queue_id" Foreign="id" />
+            </ForeignKey>
+        </TableCreate>
+    </DatabaseUpgrade>
+    <DatabaseUninstall Type="pre">
+        <TableDrop Name="ps_sms_queues" />
+    </DatabaseUninstall>
     <CodeInstall Type="post"><![CDATA[
         # define function name
         my $FunctionName = 'CodeInstall';
