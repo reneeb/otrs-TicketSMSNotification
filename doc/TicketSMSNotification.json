@@ -15,5 +15,25 @@
     "description" : {
         "en": "Send agent notifications via SMS.",
         "de": "Agenten-Benachrichtigungen per SMS"
-    }
+    },
+    "database" : [
+        {
+            "type": "Insert",
+            "name": "ticket_history_type",
+            "version": 0,
+            "columns": [
+                { "name": "name", "type": "Quote", "value": "SMSNotification" },
+                { "name": "comments", "type": "Quote", "value": "Sent SMS notification to agent" },
+                { "name": "valid_id", "value": "1" },
+                { "name": "create_time", "type": "Quote", "value": "2012-10-18 00:00:00" },
+                { "name": "create_by", "value": "1" },
+                { "name": "change_time", "type": "Quote", "value": "2012-10-18 00:00:00" },
+                { "name": "change_by", "value": "1" }
+            ]
+        }
+    ],
+    "code" : [
+        { "type": "Install", "version": 0 },
+        { "type": "Upgrade", "version": 0 }
+    ]
 }
