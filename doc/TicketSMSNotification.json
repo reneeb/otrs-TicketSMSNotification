@@ -16,6 +16,11 @@
         "en": "Send agent notifications via SMS.",
         "de": "Agenten-Benachrichtigungen per SMS"
     },
+    "requires" : {
+        "module" : {
+            "Nexmo::SMS" : "0.03"
+        }
+    },
     "database" : [
         {
             "type": "Insert",
