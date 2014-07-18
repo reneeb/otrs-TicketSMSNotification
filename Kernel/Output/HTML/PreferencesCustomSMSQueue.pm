@@ -109,7 +109,7 @@ sub Run {
     # delete old custom queues
     $Self->{DBObject}->Do(
         SQL => "
-            DELETE FROM personal_queues
+            DELETE FROM ps_sms_queues
             WHERE user_id = ?",
         Bind => [ \$Param{UserData}->{UserID} ],
     );
@@ -134,7 +134,7 @@ sub Run {
 
                 $Self->{DBObject}->Do(
                     SQL => "
-                        INSERT INTO personal_queues (queue_id, user_id)
+                        INSERT INTO ps_sms_queues (queue_id, user_id)
                         VALUES (?, ?)",
                     Bind => [ \$ID, \$Param{UserData}->{UserID} ]
                 );
@@ -142,7 +142,7 @@ sub Run {
         }
     }
 
-    my $CacheKey = 'GetAllCustomQueues::' . $Param{UserData}->{UserID};
+    my $CacheKey = 'GetAllCustomSMSQueues::' . $Param{UserData}->{UserID};
     $Self->{CacheInternalObject}->Delete( Key => $CacheKey );
 
     $Self->{Message} = 'Preferences updated successfully!';

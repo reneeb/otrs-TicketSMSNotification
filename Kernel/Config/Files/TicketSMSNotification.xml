@@ -131,15 +131,12 @@
         <SubGroup>Frontend::Agent::Preferences</SubGroup>
         <Setting>
             <Hash>
-                <Item Key="Module">Kernel::Output::HTML::PreferencesGeneric</Item>
+                <Item Key="Module">Kernel::Output::HTML::PreferencesPhone</Item>
                 <Item Key="Column">SMS Settings</Item>
                 <Item Key="Label" Translatable="1">Mobile number to send the SMS notifications to.</Item>
-                <Item Key="Key" Translatable="1">Mobile number to send the SMS notifications to.</Item>
-                <Item Key="Data">
-                    <String Regex="^\+?[0-9]+$"></String>
-                </Item>
-                <Item Key="DataSelected"></Item>
+                <Item Key="Key" Translatable="1">Mobile number to send the SMS notifications to (international format, e.g. "+49 123 45236" or "+4911-2351223").</Item>
                 <Item Key="PrefKey">UserTicketSMSNotificationMobile</Item>
+                <Item Key="Block">Input</Item>
                 <Item Key="Prio">25001</Item>
                 <Item Key="Active">1</Item>
             </Hash>

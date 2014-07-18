@@ -23,6 +23,29 @@
     },
     "database" : [
         {
+            "type": "TableCreate",
+            "version": [ 0, "3.3.2" ],
+            "name": "ps_sms_queues",
+            "columns": [
+                { "name": "user_id", "required": "true", "type": "SMALLINT" },
+                { "name": "queue_id", "required": "true", "type": "SMALLINT" },
+            ],
+            "keys" : [
+                {
+                    "name": "users",
+                    "references": [
+                        { "local": "user_id", "foreign": "id" },
+                    ]
+                },
+                {
+                    "name": "queue",
+                    "references": [
+                        { "local": "queue_id", "foreign": "id" }
+                    ]
+                }
+            ]
+        },
+        {
             "type": "Insert",
             "name": "ticket_history_type",
             "version": 0,
