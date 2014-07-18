@@ -1,8 +1,6 @@
 # --
 # Kernel/System/Ticket/Event/SMSNotification.pm - a event module to send notifications
-# Copyright (C) 2010-2011 einraumwerk, http://einraumwerk.de/
-# --
-# $Id: SMSNotification.pm,v 1.9 2011/05/31 07:56:36 rb Exp $
+# Copyright (C) 2011 - 2014 Perl-Services.de, http://perl-services.de
 # --
 # This software comes with ABSOLUTELY NO WARRANTY. For details, see
 # the enclosed file COPYING for license information (AGPL). If you
@@ -15,9 +13,9 @@ use strict;
 use warnings;
 
 use Nexmo::SMS;
+use Kernel::System::TicketSMSNotificationUtils;
 
-use vars qw($VERSION);
-$VERSION = qw($Revision: 1.9 $) [1];
+our $VERSION = 0.02;
 
 sub new {
     my ( $Type, %Param ) = @_;
@@ -28,11 +26,15 @@ sub new {
 
     # get needed objects
     for my $Needed (
-        qw(DBObject ConfigObject TicketObject LogObject TimeObject UserObject CustomerUserObject SendmailObject QueueObject GroupObject MainObject EncodeObject)
+        qw(DBObject ConfigObject TicketObject LogObject TimeObject UserObject
+            CustomerUserObject SendmailObject QueueObject GroupObject MainObject
+            EncodeObject)
         )
     {
         $Self->{$Needed} = $Param{$Needed} || die "Got no $Needed!";
     }
+
+    $Self->{UtilsObject} = Kernel::System::TicketSMSNotificationUtils->new( %{$Self} );
 
     return $Self;
 }
@@ -46,15 +48,22 @@ sub Run {
     );
 
     # check needed stuff
-    for (qw(Event Data Config UserID)) {
-        if ( !$Param{$_} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $_!" );
+    for my $Needed (qw(Event Data Config UserID)) {
+        if ( !$Param{$Needed} ) {
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Need $Needed!",
+            );
             return;
         }
     }
-    for (qw(TicketID ArticleID)) {
-        if ( !$Param{Data}->{$_} ) {
-            $Self->{LogObject}->Log( Priority => 'error', Message => "Need $_ in Data!" );
+
+    for my $NeededData (qw(TicketID)) {
+        if ( !$Param{Data}->{$NeededData} ) {
+            $Self->{LogObject}->Log(
+                Priority => 'error',
+                Message  => "Need $NeededData!",
+            );
             return;
         }
     }
@@ -68,20 +77,20 @@ sub Run {
         TicketID => $Param{Data}->{TicketID},
     );
 
-    $Self->{LogObject}->Log(
-        Priority => 'notice',
-        Message => 'Sender-/ArticleType: ' . join '::', @Article{qw(SenderType ArticleType)},
+    my $Action = 'FollowUp';
+    if ( $Param{Data}->{ArticleID} && $Article{ArticleID} == $Param{Data}->{ArticleID} ) {
+        $Action = 'New';
+    }
+    elsif ( $Param{Event} eq 'TicketQueueUpdate' ) {
+        $Action = 'Move',
+    }
+
+    my %Recipients = $Self->{UtilsObject}->RecipientsGet(
+        QueueID => $Ticket{QueueID},
+        Action  => $Action,
     );
 
-    return 1 if $Article{ArticleID} != $Param{Data}->{ArticleID};
-    return 1 if $Article{SenderType} ne 'customer' || $Article{ArticleType} ne 'email-external';
-
-    my $Config      = $Self->{ConfigObject}->Get( 'SMSNotification::QueueRecipients' );
-    my $QueueConfig = $Config->{ $Ticket{Queue} };
-
-    return 1 if !$QueueConfig;
-
-    my %Recipients = map{ $_ => 1 }split /\s*;\s*/, $QueueConfig;
+    return if !%Recipients;
 
     my $User   = $Self->{ConfigObject}->Get( 'SMSNotification::NexmoUser' );
     my $Passwd = $Self->{ConfigObject}->Get( 'SMSNotification::NexmoPassword' );
@@ -94,11 +103,31 @@ sub Run {
         password => $Passwd,
     );
 
-    for my $Recipient ( keys %Recipients ) {
+    my $TicketHook    = $Self->{ConfigObject}->Get( 'Ticket::Hook' ) || '';
+    my $TicketDivider = $Self->{ConfigObject}->Get( 'Ticket::HookDivider' ) || '';
+    $Article{Subject} =~ s{\[ \Q$TicketHook\E \Q$TicketDivider\E [0-9]+ \]}{}xms;;
+
+    my $Text = $Action . '#' . $Ticket{TicketNumber} . ' ' . $Article{Subject};
+
+    if ( 140 < length $Text ) {
+        $Text = substr( $Text, 0, 135 ) . '[...]';
+    }
+
+    my %NumberSeen;
+
+    RECIPIENT:
+    for my $UserID ( keys %Recipients ) {
+
+        next RECIPIENT if $Param{UserID} == $UserID;
+
+        my $Recipient = $Recipients{$UserID};
+
+        next RECIPIENT if $NumberSeen{$Recipient}++;
+
         my $Error;
 
         my $SMS = $NexmoObject->sms(
-            text => $Article{Subject},
+            text => $Text,
             to   => $Recipient,
             from => $From,
         ) or $Error =  $NexmoObject->errstr;
@@ -118,6 +147,14 @@ sub Run {
                 Message  => $Error,
             );
             next;
+        }
+        else {
+            $Self->{TicketObject}->HistoryAdd(
+                TicketID     => $Ticket{TicketID},
+                Name         => 'SMSNotification%%' . $Recipient,
+                HistoryType  => 'SMSNotification',
+                CreateUserID => $Param{UserID},
+            );
         }
     }
 
