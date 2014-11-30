@@ -1,131 +1,18 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <otrs_package version="1.0">
-    <!-- GENERATED WITH OTRS::OPM::Maker::Command::sopm (1.21) -->
+    <CVS>$Id: TicketSMSNotification.sopm,v 1.1.1.1 2011/04/15 07:49:58 rb Exp $</CVS>
     <Name>TicketSMSNotification</Name>
-    <Version>3.3.2</Version>
+    <Version>0.0.3</Version>
     <Framework>3.0.x</Framework>
-    <Framework>3.1.x</Framework>
-    <Framework>3.2.x</Framework>
-    <Framework>3.3.x</Framework>
-    <ModuleRequired Version="0.03">Nexmo::SMS</ModuleRequired>
     <Vendor>Perl-Services.de</Vendor>
-    <URL>http://www.perl-services.de</URL>
-    <Description Lang="de">Agenten-Benachrichtigungen per SMS</Description>
-    <Description Lang="en">Send agent notifications via SMS.</Description>
+    <URL>http://perl-services.de/</URL>
     <License>GNU AFFERO GENERAL PUBLIC LICENSE Version 3, November 2007</License>
+    <Description Lang="en">Send short messages to agent when a ticket is created.</Description>
+    <Description Lang="de">Sende SMS an Agenten wenn ein Ticket erzeugt wird.</Description>
+    <ModuleRequired Version="0.03">Nexmo::SMS</ModuleRequired>
     <Filelist>
-        <File Permission="644" Location="Custom/Kernel/System/TicketSMSNotificationUtils.pm" />
-        <File Permission="644" Location="Kernel/Config/Files/TicketSMSNotification.xml" />
-        <File Permission="644" Location="Kernel/Language/de_TicketSMSNotification.pm" />
-        <File Permission="644" Location="Kernel/Output/HTML/PreferencesCustomSMSQueue.pm" />
-        <File Permission="644" Location="Kernel/Output/HTML/PreferencesPhone.pm" />
-        <File Permission="644" Location="Kernel/System/Ticket/Event/SMSNotification.pm" />
-        <File Permission="644" Location="doc/TicketSMSNotification.json" />
-        <File Permission="644" Location="doc/en/TicketSMSNotification.pod" />
-        <File Permission="644" Location="var/packagesetup/TicketSMSNotification.pm" />
+        <File Permission="644" Location="Kernel/Config/Files/TicketSMSNotification.xml"/>
+        <File Permission="644" Location="Kernel/System/Ticket/Event/SMSNotification.pm"/>
+        <File Permission="644" Location="doc/en/TicketSMSNotification.pod"/>
     </Filelist>
-    <DatabaseInstall Type="post">
-        <TableCreate Name="ps_sms_queues">
-            <Column Name="user_id" Required="true" Type="SMALLINT" />
-            <Column Name="queue_id" Required="true" Type="SMALLINT" />
-            <ForeignKey ForeignTable="users">
-                <Reference Local="user_id" Foreign="id" />
-            </ForeignKey>
-            <ForeignKey ForeignTable="queue">
-                <Reference Local="queue_id" Foreign="id" />
-            </ForeignKey>
-        </TableCreate>
-        <Insert Table="ticket_history_type">
-            <Data Key="name" Type="Quote"><![CDATA[SMSNotification]]></Data>
-            <Data Key="comments" Type="Quote"><![CDATA[Sent SMS notification to agent]]></Data>
-            <Data Key="valid_id">1</Data>
-            <Data Key="create_time" Type="Quote"><![CDATA[2012-10-18 00:00:00]]></Data>
-            <Data Key="create_by">1</Data>
-            <Data Key="change_time" Type="Quote"><![CDATA[2012-10-18 00:00:00]]></Data>
-            <Data Key="change_by">1</Data>
-        </Insert>
-    </DatabaseInstall>
-    <DatabaseUpgrade Type="post">
-        <TableCreate Name="ps_sms_queues" Version="3.3.2">
-            <Column Name="user_id" Required="true" Type="SMALLINT" />
-            <Column Name="queue_id" Required="true" Type="SMALLINT" />
-            <ForeignKey ForeignTable="users">
-                <Reference Local="user_id" Foreign="id" />
-            </ForeignKey>
-            <ForeignKey ForeignTable="queue">
-                <Reference Local="queue_id" Foreign="id" />
-            </ForeignKey>
-        </TableCreate>
-    </DatabaseUpgrade>
-    <DatabaseUninstall Type="pre">
-        <TableDrop Name="ps_sms_queues" />
-    </DatabaseUninstall>
-    <CodeInstall Type="post"><![CDATA[
-        # define function name
-        my $FunctionName = 'CodeInstall';
-
-        # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
-
-        # load the module
-        if ( $Self->{MainObject}->Require($CodeModule) ) {
-
-            # create new instance
-            my $CodeObject = $CodeModule->new( %{$Self} );
-
-            if ($CodeObject) {
-
-                # start methode
-                if ( !$CodeObject->$FunctionName(%{$Self}) ) {
-                    $Self->{LogObject}->Log(
-                        Priority => 'error',
-                        Message  => "Could not call method $FunctionName() on $CodeModule.pm."
-                    );
-                }
-            }
-
-            # error handling
-            else {
-                $Self->{LogObject}->Log(
-                    Priority => 'error',
-                    Message  => "Could not call method new() on $CodeModule.pm."
-                );
-            }
-        }
-
-    ]]></CodeInstall>
-    <CodeUpgrade Type="post"><![CDATA[
-        # define function name
-        my $FunctionName = 'CodeUpgrade';
-
-        # create the package name
-        my $CodeModule = 'var::packagesetup::' . $Param{Structure}->{Name}->{Content};
-
-        # load the module
-        if ( $Self->{MainObject}->Require($CodeModule) ) {
-
-            # create new instance
-            my $CodeObject = $CodeModule->new( %{$Self} );
-
-            if ($CodeObject) {
-
-                # start methode
-                if ( !$CodeObject->$FunctionName(%{$Self}) ) {
-                    $Self->{LogObject}->Log(
-                        Priority => 'error',
-                        Message  => "Could not call method $FunctionName() on $CodeModule.pm."
-                    );
-                }
-            }
-
-            # error handling
-            else {
-                $Self->{LogObject}->Log(
-                    Priority => 'error',
-                    Message  => "Could not call method new() on $CodeModule.pm."
-                );
-            }
-        }
-
-    ]]></CodeUpgrade>
 </otrs_package>

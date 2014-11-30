@@ -11,6 +11,12 @@ In the SysConfig you have to configure the account data.
 
 The recipient of the messages can be configured by queue.
 
+=head1 PRO-VERSION
+
+There is a pro version of this module. The pro version allows you to use other providers than Nexmo.
+You can find more information about the pro version at 
+L<http://otrs.perl-services.de/pro_pakete/TicketSMSNotification.html>.
+
 =head1 AUTHOR AND LICENSE
 
 Renee Baecker E<lt>opar@perl-services.deE<gt>
