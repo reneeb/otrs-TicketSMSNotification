@@ -11,6 +11,10 @@ In the SysConfig you have to configure the account data.
 
 The recipient of the messages can be configured by queue.
 
+=head1 REPOSITORY & BUGTRACKER
+
+The code repository and the bugtracker are available at L<http://github.com/reneeb/otrs-TicketSMSNotification>.
+
 =head1 PRO-VERSION
 
 There is a pro version of this module. The pro version allows you to use other providers than Nexmo.
