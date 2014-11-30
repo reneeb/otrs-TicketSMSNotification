@@ -15,7 +15,7 @@ The recipient of the messages can be configured by queue.
 
 There is a pro version of this module. The pro version allows you to use other providers than Nexmo.
 You can find more information about the pro version at 
-L<http://otrs.perl-services.de/pro_pakete/TicketSMSNotification.html>.
+L<http://feature-addons.de/otrs/Misc%20Agent%20Tools/TicketSMSNotification>.
 
 =head1 AUTHOR AND LICENSE
 
